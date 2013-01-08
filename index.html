@@ -1,0 +1,164 @@
+<script src="http://crowdcrafting.org/static/vendor/jquery.js"></script>
+<script src="vendor/pybossa.js"></script>
+<link href="vendor/chosen/chosen.css" rel="stylesheet" />
+<script type="text/javascript" src="vendor/chosen/chosen.jquery.js"></script>
+<!--
+ *  at first let's inject some intelligence into pybossa.js
+ *  this should not be part of regular pybossa apps
+-->
+<script>
+$.extend(pybossa, {
+
+    // fallback for user defined action
+    __taskLoaded: function(task, deferred) {
+        deferred.resolve(task);
+    },
+
+    taskLoaded: function(userFunc) {
+        this.__taskLoaded = userFunc;
+    },
+
+    presentTask: function(userFunc) {
+        this.__presentTask = userFunc;
+    },
+
+    run: function(appname) {
+        var me = this;
+
+        $.getJSON(pybossa.url + '/app?short_name=' + appname).done(function(app) {
+
+            app = app[0];
+
+            function getTask(offset) {
+                offset = offset || 0;
+                var def = $.Deferred();
+                $.getJSON(pybossa.url + '/app/' + app.id + '/newtask?offset=' + offset).done(function(task) {
+                    var udef = $.Deferred();
+                    me.__taskLoaded(task, udef);
+                    udef.done(function(task) {
+                        def.resolve(task);
+                    });
+                });
+                return def.promise();
+            }
+
+            function loop(task, answer) {
+                var nextLoaded = getTask(1),
+                    taskSolved = $.Deferred();
+
+                me.__presentTask(task, taskSolved);
+                $.when(nextLoaded, taskSolved).done(loop);
+            }
+            getTask().done(loop);
+
+        });
+
+    }
+
+});
+</script>
+
+<!--
+ * the REAL presenter starts below this line
+-->
+
+<p class="lead">What play is this passage from? <span class="task-id badge"></span></p>
+
+<div style="margin-bottom:1em" class="excerpt"></div>
+
+<form class="work-chooser">
+  <select data-placeholder="Choose a Play">
+<option value="nochoice"></option>
+<option value="alls_well_that_ends_well">All's Well That Ends Well</option>
+<option value="antony_and_cleopatra">Antony and Cleopatra</option>
+<option value="as_you_like_it">As you Like it</option>
+<option value="comedy_of_errors">The Comedy of Errors</option>
+<option value="coriolanus">Coriolanus</option>
+<option value="cymbeline">Cymbeline</option>
+<option value="hamlet">Hamlet</option>
+<option value="henry_iv_part_1">Henry IV, Part 1</option>
+<option value="henry_iv_part_2">Henry IV, Part 2</option>
+<option value="henry_v">Henry V</option>
+<option value="henry_vi_part_1">Henry VI Part 1</option>
+<option value="henry_vi_part_2">Henry VI, Part 2</option>
+<option value="henry_vi_part_3">Henry VI Part 3</option>
+<option value="henry_viii">Henry VIII</option>
+<option value="john">King John</option>
+<option value="julius_caesar">Julius Caesar</option>
+<option value="lear">King Lear</option>
+<option value="lovers_complaint">A Lover's Complaint</option>
+<option value="loves_labours_lost">Love's Labour's Lost</option>
+<option value="macbeth">Macbeth</option>
+<option value="merry_wives_of_windsor">The Merry Wives of Windsor</option>
+<option value="midsummer_nights_dream">A Midsummer Night's Dream</option>
+<option value="measure_for_measure">Measure for Measure</option>
+<option value="merchant_of_venice">The Merchant of Venice</option>
+<option value="much_ado_about_nothing">Much ado about Nothing</option>
+<option value="othello">Othello</option>
+<option value="passionate_pilgrim">The Passionate Pilgrim</option>
+<option value="pericles">Pericles</option>
+<option value="phoenix_and_the_turtle">The Phoenix and the Turtle</option>
+<option value="rape_of_lucrece">The Rape of Lucrece</option>
+<option value="richard_ii">Richard II</option>
+<option value="richard_iii">Richard III</option>
+<option value="romeo_and_juliet">Romeo and Juliet</option>
+<option value="sonnets">Sonnets</option>
+<option value="taming_of_the_shrew">The Taming of the Shrew</option>
+<option value="tempest">The Tempest</option>
+<option value="timon_of_athens">Timon of Athens</option>
+<option value="titus_andronicus">Titus Andronicus</option>
+<option value="troilus_and_cressida">Troilus and Cressida</option>
+<option value="twelfth_night">Twelfth Night</option>
+<option value="two_gentlemen_of_verona">Two Gentlemen of Verona</option>
+<option value="venus_and_adonis">Venus and Adonis</option>
+<option value="winters_tale">The Winter's Tale</option>
+  </select>
+  <button class="btn btn-large btn-success btn-yes">Submit</button>
+</form>
+<button class="btn btn-large btn-dontknow">I don't know, give me a new one</button>
+
+<div class="answer"></div>
+
+<script>
+$('.work-chooser select').chosen();
+
+pybossa.url = 'http://crowdcrafting.org/api';
+pybossa.taskLoaded(function(task, deferred) {
+  deferred.resolve(task);
+});
+
+pybossa.presentTask(function(task, deferred) {
+  $('.excerpt').html($('<pre />').text(task.info.content));
+  $('.task-id').html(task.id);
+  $('.btn-dontknow').off('click').on('click', function(evt) {
+    evt.preventDefault();
+    saveAnswerAndLoad();
+  });
+  $('.btn-yes').off('click').on('click', function(evt) {
+    evt.preventDefault();
+    var answer = $('.work-chooser select').val();
+    if (answer == 'nochoice') {
+      alert("Please choose a play or select 'I don't know'");
+    } else {
+      saveAnswerAndLoad(answer);
+    }
+  });
+  $('.loading').hide();
+
+  function saveAnswerAndLoad(answer) {
+    $('.answer').html('The answer is ' + task.info['play '] + ' (' + task.info.speaker + ')');
+    $('.loading').show();
+    setTimeout(function() {
+        pybossa.saveTask(task.id, answer).done(function() {
+          $('.answer').html('');
+          deferred.resolve();
+        })
+      },
+      3000
+    );
+  }
+});
+
+pybossa.run('bardomatic');
+
+</script>

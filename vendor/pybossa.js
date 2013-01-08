@@ -16,12 +16,14 @@
 
 
 (function( pybossa, $, undefined ) {
- var url = '/api';
+ if (!pybossa.url) {
+   pybossa.url = '/api';
+ }
 
  // Private methods
  function getApp(appname){
     return $.ajax({
-        url: url + '/app',
+        url: pybossa.url + '/app',
         data: 'short_name='+appname,
         dataType:'json'
         })
@@ -32,7 +34,7 @@
 
  function getTaskRun( app ) {
      return $.ajax({
-            url: url + '/app/' + app.id + '/newtask',
+            url: pybossa.url + '/app/' + app.id + '/newtask',
             dataType: 'json'
              })
             .pipe( function( data ) {
@@ -43,7 +45,7 @@
 
  function getTask( taskid, answer ) {
      return $.ajax({
-            url: url + '/task/' + taskid,
+            url: pybossa.url + '/task/' + taskid,
             dataType: 'json'
              })
             .pipe( function( data ) {
@@ -65,7 +67,7 @@
 
      return $.ajax({
             type: 'POST',
-            url: url + '/taskrun',
+            url: pybossa.url + '/taskrun',
             dataType: 'json',
             contentType: 'application/json',
             data: taskrun
@@ -91,7 +93,7 @@
 
  function userProgress( appname ) {
      return $.ajax({
-         url: url + '/app/' + appname + '/userprogress',
+         url: pybossa.url + '/app/' + appname + '/userprogress',
          dataType: 'json',
      });
  }
@@ -99,14 +101,14 @@
  // Public methods
  pybossa.newTask = function ( appname, endpoint ) {
      if (endpoint !== undefined) {
-         url = endpoint + '/api';
+         pybossa.url = endpoint + '/api';
      }
      return getApp(appname).pipe(getTaskRun);
  };
 
  pybossa.saveTask = function ( taskid, answer, endpoint ) {
      if (endpoint !== undefined) {
-         url = endpoint + '/api';
+         pybossa.url = endpoint + '/api';
      }
      return getTask( taskid, answer ).pipe(createTaskRun);
  };
@@ -122,7 +124,7 @@
 
  pybossa.userProgress = function ( appname, endpoint) {
      if (endpoint !== undefined) {
-         url = endpoint + '/api';
+         pybossa.url = endpoint + '/api';
      }
      return userProgress( appname );
  };
