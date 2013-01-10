@@ -11,6 +11,24 @@
 .x-footer {
   margin-top: 50px;
 }
+
+.answer {
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.answer h3 {
+  display: inline;
+  font-size: 16px;
+}
+
+.answer .play {
+  font-weight: bold;
+}
+
+.answer .speaker {
+  font-style: italic;
+}
 </style>
 
 <script src="http://crowdcrafting.org/static/vendor/jquery.js"></script>
@@ -81,6 +99,8 @@ $.extend(pybossa, {
 <h2>Bardomatic - How well do you know Shakespeare?</h2>
 <p class="lead">What Shakespeare play is this passage from? <span class="task-id badge"></span></p>
 
+<div class="answer"></div>
+
 <div style="margin-bottom:1em" class="excerpt"></div>
 
 <form class="work-chooser">
@@ -134,8 +154,6 @@ $.extend(pybossa, {
 </form>
 <button class="btn btn-dontknow">I don't know, give me a new one</button>
 
-<div class="answer"></div>
-
 <div class="x-footer">Powered by <a href="http://crowdcrafting.org/">CrowdCrafting</a> and <a href="http://dev.pybossa.com/">PyBossa</a> &mdash; <a href="https://github.com/rgrp/bardomatic">Source code</a></div>
 </div>
 
@@ -166,7 +184,7 @@ pybossa.presentTask(function(task, deferred) {
   $('.loading').hide();
 
   function saveAnswerAndLoad(answer) {
-    $('.answer').html('The answer is ' + task.info['play '] + ' (' + task.info.speaker + ')');
+    $('.answer').html('<h3>Answer:</h3> <span class="play">' + task.info['play '] + '</span> &ndash; spoken by <span class="speaker">' + task.info.speaker + '</span>');
     $('.loading').show();
     setTimeout(function() {
         pybossa.saveTask(task.id, answer).done(function() {
@@ -174,7 +192,7 @@ pybossa.presentTask(function(task, deferred) {
           deferred.resolve();
         })
       },
-      3000
+      4000
     );
   }
 });
