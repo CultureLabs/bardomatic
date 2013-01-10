@@ -1,3 +1,18 @@
+<link href="http://crowdcrafting.org/static/vendor/bootstrap.min.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+.x-presenter {
+  margin: 20px;  
+}
+
+.x-presenter .task-id {
+  display: none;
+}
+
+.x-footer {
+  margin-top: 50px;
+}
+</style>
+
 <script src="http://crowdcrafting.org/static/vendor/jquery.js"></script>
 <script src="vendor/pybossa.js"></script>
 <link href="vendor/chosen/chosen.css" rel="stylesheet" />
@@ -62,7 +77,9 @@ $.extend(pybossa, {
  * the REAL presenter starts below this line
 -->
 
-<p class="lead">What play is this passage from? <span class="task-id badge"></span></p>
+<div class="x-presenter">
+<h2>Bardomatic - How well do you know Shakespeare?</h2>
+<p class="lead">What Shakespeare play is this passage from? <span class="task-id badge"></span></p>
 
 <div style="margin-bottom:1em" class="excerpt"></div>
 
@@ -113,11 +130,14 @@ $.extend(pybossa, {
 <option value="venus_and_adonis">Venus and Adonis</option>
 <option value="winters_tale">The Winter's Tale</option>
   </select>
-  <button class="btn btn-large btn-success btn-yes">Submit</button>
+  <button class="btn btn-success btn-yes">Submit</button>
 </form>
-<button class="btn btn-large btn-dontknow">I don't know, give me a new one</button>
+<button class="btn btn-dontknow">I don't know, give me a new one</button>
 
 <div class="answer"></div>
+
+<div class="x-footer">Powered by <a href="http://crowdcrafting.org/">CrowdCrafting</a> and <a href="http://dev.pybossa.com/">PyBossa</a> &mdash; <a href="https://github.com/rgrp/bardomatic">Source code</a></div>
+</div>
 
 <script>
 $('.work-chooser select').chosen();
