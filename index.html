@@ -184,7 +184,7 @@ pybossa.presentTask(function(task, deferred) {
   $('.loading').hide();
 
   function saveAnswerAndLoad(answer) {
-    $('.answer').html('<h3>Answer:</h3> <span class="play">' + task.info['play '] + '</span> &ndash; spoken by <span class="speaker">' + task.info.speaker + '</span>');
+    $('.answer').html('<h3>Answer:</h3> <span class="play">' + task.info['play'] + '</span> &ndash; spoken by <span class="speaker">' + task.info.speaker + '</span>');
     $('.loading').show();
     setTimeout(function() {
         pybossa.saveTask(task.id, answer).done(function() {
