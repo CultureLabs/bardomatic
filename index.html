@@ -1,4 +1,12 @@
 <link href="http://crowdcrafting.org/static/vendor/bootstrap.min.css" rel="stylesheet" type="text/css">
+<script src="http://crowdcrafting.org/static/vendor/jquery.js"></script>
+<script src="http://crowdcrafting.org/static/js/pybossa/pybossa.js"></script>
+<script src="vendor/pybossa.js"></script>
+
+<!-- copy and paste from here when uploading to pybossa -->
+
+<link href="vendor/chosen/chosen.css" rel="stylesheet" />
+
 <style type="text/css">
 .x-presenter {
   margin: 20px;  
@@ -31,65 +39,7 @@
 }
 </style>
 
-<script src="http://crowdcrafting.org/static/vendor/jquery.js"></script>
-<script src="vendor/pybossa.js"></script>
-<link href="vendor/chosen/chosen.css" rel="stylesheet" />
 <script type="text/javascript" src="vendor/chosen/chosen.jquery.js"></script>
-<!--
- *  at first let's inject some intelligence into pybossa.js
- *  this should not be part of regular pybossa apps
--->
-<script>
-$.extend(pybossa, {
-
-    // fallback for user defined action
-    __taskLoaded: function(task, deferred) {
-        deferred.resolve(task);
-    },
-
-    taskLoaded: function(userFunc) {
-        this.__taskLoaded = userFunc;
-    },
-
-    presentTask: function(userFunc) {
-        this.__presentTask = userFunc;
-    },
-
-    run: function(appname) {
-        var me = this;
-
-        $.getJSON(pybossa.url + '/app?short_name=' + appname).done(function(app) {
-
-            app = app[0];
-
-            function getTask(offset) {
-                offset = offset || 0;
-                var def = $.Deferred();
-                $.getJSON(pybossa.url + '/app/' + app.id + '/newtask?offset=' + offset).done(function(task) {
-                    var udef = $.Deferred();
-                    me.__taskLoaded(task, udef);
-                    udef.done(function(task) {
-                        def.resolve(task);
-                    });
-                });
-                return def.promise();
-            }
-
-            function loop(task, answer) {
-                var nextLoaded = getTask(1),
-                    taskSolved = $.Deferred();
-
-                me.__presentTask(task, taskSolved);
-                $.when(nextLoaded, taskSolved).done(loop);
-            }
-            getTask().done(loop);
-
-        });
-
-    }
-
-});
-</script>
 
 <!--
  * the REAL presenter starts below this line
@@ -158,6 +108,8 @@ $.extend(pybossa, {
 </div>
 
 <script>
+pybossa.setEndpoint('http://crowdcrafting.org');
+ 
 $('.work-chooser select').chosen();
 
 pybossa.url = 'http://crowdcrafting.org/api';
@@ -198,5 +150,4 @@ pybossa.presentTask(function(task, deferred) {
 });
 
 pybossa.run('bardomatic');
-
 </script>

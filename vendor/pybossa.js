@@ -16,14 +16,12 @@
 
 
 (function( pybossa, $, undefined ) {
- if (!pybossa.url) {
-   pybossa.url = '/api';
- }
+ var url = '/api';
 
  // Private methods
  function getApp(appname){
     return $.ajax({
-        url: pybossa.url + '/app',
+        url: url + '/app',
         data: 'short_name='+appname,
         dataType:'json'
         })
@@ -34,7 +32,7 @@
 
  function getTaskRun( app ) {
      return $.ajax({
-            url: pybossa.url + '/app/' + app.id + '/newtask',
+            url: url + '/app/' + app.id + '/newtask',
             dataType: 'json'
              })
             .pipe( function( data ) {
@@ -45,7 +43,7 @@
 
  function getTask( taskid, answer ) {
      return $.ajax({
-            url: pybossa.url + '/task/' + taskid,
+            url: url + '/task/' + taskid,
             dataType: 'json'
              })
             .pipe( function( data ) {
@@ -67,7 +65,7 @@
 
      return $.ajax({
             type: 'POST',
-            url: pybossa.url + '/taskrun',
+            url: url + '/taskrun',
             dataType: 'json',
             contentType: 'application/json',
             data: taskrun
@@ -93,23 +91,90 @@
 
  function userProgress( appname ) {
      return $.ajax({
-         url: pybossa.url + '/app/' + appname + '/userprogress',
+         url: url + '/app/' + appname + '/userprogress',
          dataType: 'json',
      });
  }
 
+ // fallback for user defined action
+ function __taskLoaded (task, deferred) {
+     deferred.resolve(task);
+ }
+ 
+ function taskLoaded (userFunc) {
+
+     this.__taskLoaded = userFunc;
+ }
+ 
+ function presentTask (userFunc) {
+     this.__presentTask = userFunc;
+ }
+
+ function run ( appname ) {
+     var me = this;
+     $.ajax({
+         url: url + '/app',
+         data: 'short_name=' + appname,
+         dataType:'json'
+         }).done(function(app) {
+             app = app[0];
+             function getTask(offset) {
+                 offset = offset || 0;
+                 var def = $.Deferred();
+                 var xhr = $.ajax({
+                     url: url + '/app/' + app.id + '/newtask',
+                     data: 'offset=' + offset,
+                     dataType: 'json'
+                 });
+                 if (window.history.length <= 1) {
+                    var taskId = getCurrentTaskId(window.location.pathname);
+                    if (taskId) {
+                        param =  '/task/' + taskId;
+                        var xhr = $.ajax({
+                            url: url + '/task/' + taskId,
+                            dataType: 'json'
+                        })
+                    }
+                 }
+                 xhr.done(function(task) {
+                     var udef = $.Deferred();
+                     me.__taskLoaded(task, udef);
+                     udef.done(function(task) {
+                         def.resolve(task);
+                     });
+                 });
+                 return def.promise();
+             }
+
+             function loop(task, answer) {
+                 var nextLoaded = getTask(1),
+                     taskSolved = $.Deferred();
+                 if (task.id) {
+                   // note if working with pybossa.js locally and opening the
+                   // html page with a file:/// urls the call to
+                   // history.pushState will result in a (silent) security
+                   // exception (in chrome at least) - wrap in try/except to
+                   // avoid this
+                   try {
+                     history.pushState ({}, "Title", '/app/' + appname + '/task/' + task.id);
+                   } catch(e) {
+                     console.log(e);
+                   }
+                 }
+                 me.__presentTask(task, taskSolved);
+                 $.when(nextLoaded, taskSolved).done(loop);
+             }
+             getTask().done(loop);
+     });
+ }
+
+
  // Public methods
- pybossa.newTask = function ( appname, endpoint ) {
-     if (endpoint !== undefined) {
-         pybossa.url = endpoint + '/api';
-     }
+ pybossa.newTask = function ( appname ) {
      return getApp(appname).pipe(getTaskRun);
  };
 
- pybossa.saveTask = function ( taskid, answer, endpoint ) {
-     if (endpoint !== undefined) {
-         pybossa.url = endpoint + '/api';
-     }
+ pybossa.saveTask = function ( taskid, answer ) {
      return getTask( taskid, answer ).pipe(createTaskRun);
  };
 
@@ -122,11 +187,25 @@
      }
  };
 
- pybossa.userProgress = function ( appname, endpoint) {
-     if (endpoint !== undefined) {
-         pybossa.url = endpoint + '/api';
-     }
+ pybossa.userProgress = function ( appname ) {
      return userProgress( appname );
  };
+
+ pybossa.run = function ( appname ) {
+     return run( appname );
+ }
+
+ pybossa.taskLoaded = function ( userFunc ) {
+     return taskLoaded( userFunc );
+ }
+
+ pybossa.presentTask = function ( userFunc ) {
+     return presentTask( userFunc );
+ }
+
+ pybossa.setEndpoint = function ( endpoint ) {
+     url = endpoint + '/api';
+     return url;
+ }
 
 } ( window.pybossa = window.pybossa || {}, jQuery ));
