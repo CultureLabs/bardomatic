@@ -6,15 +6,13 @@
 <!-- copy and paste from here when uploading to pybossa -->
 
 <link href="vendor/chosen/chosen.css" rel="stylesheet" />
-<link href='http://fonts.googleapis.com/css?family=UnifrakturCook:700' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Quintessential' rel='stylesheet' type='text/css'>
 
 <style type="text/css">
- 
- 
-body {background-image:url('http://jamesharrimansmith.org/Parchment-full-size_fade.jpg');
+body {
+  background-image:url('http://jamesharrimansmith.org/Parchment-full-size_fade.jpg');
   background-size:100% 100%;
-background-repeat:no-repeat;
+  background-repeat:no-repeat;
 }
 
 .x-presenter {
@@ -22,33 +20,62 @@ background-repeat:no-repeat;
   margin-right: 10%;
 }
 
-h2{text-align: center}
-.lead {text-align: center; font-family: 'Quintessential', cursive;}
+.lead, .excerpt pre, .x-presenter, .x-presenter .btn {
+  font-family: 'Quintessential', cursive;
+}
 
-.excerpt {margin-left: auto; margin-right: auto; width: 70%; line-height:200%; font-family: 'Quintessential', cursive; font-size:30px}
-
-.work-chooser {margin-left: 10%; margin-right: auto; width: 70%;}
-
-.btn-dontknow {display:block; margin-left:10%; margin-right: auto;}
-
-h1,h2,h3,h4,h5,h6{margin:10px 0;font-family: 'Quintessential', cursive;font-weight:bold;line-height:1;color:inherit;text-rendering:optimizelegibility; font-size:50px;}
-h1 small,h2 small,h3 small,h4 small,h5 small,h6 small{font-weight:normal;line-height:1;color:#999999;}
-
+.x-presenter h2 {
+  margin: 10px 0;
+  line-height:1;
+  color:inherit;
+  font-size: 50px;
+  text-align: center;
+}
 
 .x-presenter .task-id {
   display: none;
 }
 
-.x-footer {
-  margin-top: 50px;
+.excerpt pre {
+  margin-left: 200px;
+  font-size: 22px;
+  line-height: 28px;
+  background: transparent;
+  border: none;
 }
 
-.lead {text-align:left;}
+.lead h3 {
+  display: inline;
+}
+
+.work-chooser {
+  display: inline;
+}
+
+.work-chooser .chzn-container {
+  font-size: 16px;
+  height: 26px;
+}
+
+.work-chooser .chzn-container a {
+  height: 24px;
+}
+
+.work-chooser .chzn-container input {
+  height: 26px;
+}
+
+.work-chooser .btn {
+  font-size: 16px;
+}
+
+.btn-dontknow {
+  margin-left: 5px;
+}
 
 .answer {
   margin-bottom: 20px;
   font-size: 16px;
-  font-family: georgia, sans;
 }
 
 .answer h3 {
@@ -63,52 +90,6 @@ h1 small,h2 small,h3 small,h4 small,h5 small,h6 small{font-weight:normal;line-he
 .answer .speaker {
   font-style: italic;
 }
-
-.btn-yes {
-   border-top: 1px solid #d48888;
-   background: #701919;
-   background: -webkit-gradient(linear, left top, left bottom, from(#cc1e1e), to(#701919));
-   background: -webkit-linear-gradient(top, #cc1e1e, #701919);
-   background: -moz-linear-gradient(top, #cc1e1e, #701919);
-   background: -ms-linear-gradient(top, #cc1e1e, #701919);
-   background: -o-linear-gradient(top, #cc1e1e, #701919);
-   padding: 5px 10px;
-   -webkit-border-radius: 8px;
-   -moz-border-radius: 8px;
-   border-radius: 8px;
-   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
-   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
-   box-shadow: rgba(0,0,0,1) 0 1px 0;
-   text-shadow: rgba(0,0,0,.4) 0 1px 0;
-   color: #edeaea;
-   font-size: 14px;
-   font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
-   text-decoration: none;
-   vertical-align: middle;
-   }
-.btn-yes:hover {
-   border-top-color: #a10909;
-   background: #a10909;
-   color: #ccc;
-   }
-.btn-yes:active {
-   border-top-color: #660e0e;
-   background: #660e0e;
-   }
- 
-.btn-dontknow {margin-bottom:15px;}
-  
-  .answer {text-align: center; 
-    font-size: 20px;
-    font-family: georgia, sans;}
-  
-  .excerpt pre {font-family: 'Quintessential', cursive;; 
-    font-size: 20px;
-    background:transparent;
-    /*border: 1px solid #cc1e1e;*/
-    border:none;
-}
-
 </style>
 
 <script type="text/javascript" src="vendor/chosen/chosen.jquery.js"></script>
@@ -124,9 +105,10 @@ h1 small,h2 small,h3 small,h4 small,h5 small,h6 small{font-weight:normal;line-he
 
 <div style="margin-bottom:1em" class="excerpt"></div>
 
-<p class="lead"><b>What Shakespeare play this passage is this from? <span class="task-id badge"></span></b></p>
+<div class="lead">
+  <h3>What Shakespeare play is this from?</h3>
 
-<form class="work-chooser">
+<div class="work-chooser">
   <select data-placeholder="Choose a Play">
 <option value="nochoice"></option>
 <option value="alls_well_that_ends_well">All's Well That Ends Well</option>
@@ -174,10 +156,10 @@ h1 small,h2 small,h3 small,h4 small,h5 small,h6 small{font-weight:normal;line-he
 <option value="winters_tale">The Winter's Tale</option>
   </select>
 <button class="btn btn-success btn-yes">Submit</button>
-  </form>
+<button class="btn btn-dontknow">I don't know!</button>
+</div>
 
- <button class="btn btn-dontknow">I don't know, give me a new one</button>
- </div>
+</div> <!-- /lead -->
 
 <script>
 pybossa.setEndpoint('http://crowdcrafting.org');
