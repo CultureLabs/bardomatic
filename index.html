@@ -5,7 +5,7 @@
 
 <!-- copy and paste from here when uploading to pybossa -->
 
-<link href="vendor/chosen/chosen.css" rel="stylesheet" />
+<link href="http://rgrp.okfnlabs.org/bardomatic/vendor/chosen/chosen.css" rel="stylesheet" />
 <link href='http://fonts.googleapis.com/css?family=Quintessential' rel='stylesheet' type='text/css'>
 
 <style type="text/css">
@@ -20,7 +20,7 @@ body {
   margin-right: 10%;
 }
 
-.lead, .excerpt pre, .x-presenter, .x-presenter .btn {
+.lead, .excerpt pre, .x-presenter, .x-presenter .btn, .x-presenter h2, .x-presenter h3 {
   font-family: 'Quintessential', cursive;
 }
 
@@ -30,6 +30,7 @@ body {
   color:inherit;
   font-size: 50px;
   text-align: center;
+  font-weight: bold;
 }
 
 .x-presenter .task-id {
@@ -37,15 +38,18 @@ body {
 }
 
 .excerpt pre {
-  margin-left: 200px;
+  margin-left: 150px;
   font-size: 22px;
-  line-height: 28px;
+  line-height: 26px;
   background: transparent;
   border: none;
 }
 
 .lead h3 {
   display: inline;
+  font-size: 22px; 
+  line-height: 26px;
+  font-weight: bold;
 }
 
 .work-chooser {
@@ -92,7 +96,7 @@ body {
 }
 </style>
 
-<script type="text/javascript" src="vendor/chosen/chosen.jquery.js"></script>
+<script type="text/javascript" src="http://rgrp.okfnlabs.org/bardomatic/vendor/chosen/chosen.jquery.js"></script>
 
 <!--
  * the REAL presenter starts below this line
@@ -160,6 +164,7 @@ body {
 </div>
 
 </div> <!-- /lead -->
+</div> <!-- presenter -->
 
 <script>
 pybossa.setEndpoint('http://crowdcrafting.org');
