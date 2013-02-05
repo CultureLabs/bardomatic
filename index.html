@@ -6,32 +6,33 @@
 <!-- copy and paste from here when uploading to pybossa -->
 
 <link href="vendor/chosen/chosen.css" rel="stylesheet" />
+<link href='http://fonts.googleapis.com/css?family=UnifrakturCook:700' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Quintessential' rel='stylesheet' type='text/css'>
 
 <style type="text/css">
  
  
- body {background:#000;}
+body {background-image:url('http://jamesharrimansmith.org/Parchment-full-size_fade.jpg');
+  background-size:100% 100%;
+background-repeat:no-repeat;
+}
 
 .x-presenter {
   margin-left: 10%;  
   margin-right: 10%;
-  background-image:url('http://i630.photobucket.com/albums/uu22/Bronchitus22/Parchment-full-size.jpg');
-  background-size:100% 100%;
-background-repeat:no-repeat;
-  border:2px solid #cc1e1e;
-border-radius:25px;
 }
 
 h2{text-align: center}
-.lead {text-align: center; font-family:georgia, sans}
+.lead {text-align: center; font-family: 'Quintessential', cursive;}
 
-.excerpt {margin-left: auto; margin-right: auto; width: 70%;}
+.excerpt {margin-left: auto; margin-right: auto; width: 70%; line-height:200%; font-family: 'Quintessential', cursive; font-size:30px}
 
-.work-chooser {margin-left: auto; margin-right: auto; width: 70%;}
+.work-chooser {margin-left: 10%; margin-right: auto; width: 70%;}
 
-.btn-dontknow {display:block; margin-left:auto; margin-right: auto;}
+.btn-dontknow {display:block; margin-left:10%; margin-right: auto;}
 
-h1,h2,h3,h4,h5,h6{margin:10px 0;font-family: Copperplate, "Copperplate Gothic Light", fantasy;font-weight:bold;line-height:1;color:inherit;text-rendering:optimizelegibility;}h1 small,h2 small,h3 small,h4 small,h5 small,h6 small{font-weight:normal;line-height:1;color:#999999;}
+h1,h2,h3,h4,h5,h6{margin:10px 0;font-family: 'Quintessential', cursive;font-weight:bold;line-height:1;color:inherit;text-rendering:optimizelegibility; font-size:50px;}
+h1 small,h2 small,h3 small,h4 small,h5 small,h6 small{font-weight:normal;line-height:1;color:#999999;}
 
 
 .x-presenter .task-id {
@@ -42,6 +43,7 @@ h1,h2,h3,h4,h5,h6{margin:10px 0;font-family: Copperplate, "Copperplate Gothic Li
   margin-top: 50px;
 }
 
+.lead {text-align:left;}
 
 .answer {
   margin-bottom: 20px;
@@ -94,19 +96,19 @@ h1,h2,h3,h4,h5,h6{margin:10px 0;font-family: Copperplate, "Copperplate Gothic Li
    background: #660e0e;
    }
  
- .btn-dontknow {margin-bottom:15px;} 
- 
+.btn-dontknow {margin-bottom:15px;}
+  
   .answer {text-align: center; 
     font-size: 20px;
     font-family: georgia, sans;}
   
-  .excerpt pre {font-family: georgia, sans; 
+  .excerpt pre {font-family: 'Quintessential', cursive;; 
     font-size: 20px;
-	background-image:url('http://i630.photobucket.com/albums/uu22/Bronchitus22/Parchment-full-size.jpg');
-  background-repeat;
-  border: 1px solid #cc1e1e;
+    background:transparent;
+    /*border: 1px solid #cc1e1e;*/
+    border:none;
 }
-	
+
 </style>
 
 <script type="text/javascript" src="vendor/chosen/chosen.jquery.js"></script>
@@ -116,12 +118,13 @@ h1,h2,h3,h4,h5,h6{margin:10px 0;font-family: Copperplate, "Copperplate Gothic Li
 -->
 
 <div class="x-presenter">
-<h2>Bardomatic - How well do you know Shakespeare?</h2>
-<p class="lead">What Shakespeare play is this passage from? <span class="task-id badge"></span></p>
+<h2>How well do you know your<br />Shakespeare?</h2>
 
 <div class="answer"></div>
 
 <div style="margin-bottom:1em" class="excerpt"></div>
+
+<p class="lead"><b>What Shakespeare play this passage is this from? <span class="task-id badge"></span></b></p>
 
 <form class="work-chooser">
   <select data-placeholder="Choose a Play">
@@ -170,12 +173,11 @@ h1,h2,h3,h4,h5,h6{margin:10px 0;font-family: Copperplate, "Copperplate Gothic Li
 <option value="venus_and_adonis">Venus and Adonis</option>
 <option value="winters_tale">The Winter's Tale</option>
   </select>
-  <button class="btn btn-success btn-yes">Submit</button>
-</form>
-<button class="btn btn-dontknow">I don't know, give me a new one</button>
+<button class="btn btn-success btn-yes">Submit</button>
+  </form>
 
-
-</div>
+ <button class="btn btn-dontknow">I don't know, give me a new one</button>
+ </div>
 
 <script>
 pybossa.setEndpoint('http://crowdcrafting.org');
